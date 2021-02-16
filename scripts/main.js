@@ -83,6 +83,8 @@ class MoviesApp {
                 return searchMovieByTitle(movie, searchValue);
             }).forEach(makeBgActive)
 
+            this.searchInput.value = ""
+
         });
     }
 
