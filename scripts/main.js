@@ -43,6 +43,18 @@ class MoviesApp {
 
     }
 
+    createRadioButton(movie){
+      const{year, id} = movie
+      let count = data.filter((movie) => movie.year === year).length
+      return this.createYearHTML(id,this.yearHandler, year,count)
+    }
+
+    createCheckBoxButton(movie){
+      const{genre, id} = movie
+      let count = data.filter((movie) => movie.genre === genre).length
+      return this.createGenreHTML(id,this.genreHandler, genre,count)
+    }
+
     fillTable(){
         /* const moviesHTML = data.reduce((acc, cur) => {
             return acc + this.createMovieEl(cur);
@@ -54,17 +66,29 @@ class MoviesApp {
     }
 
     fillYearBox(){
+     /*
       const yearHtml = data.reduce((acc,cur) =>{
         return acc + this.createRadioButton(cur)
       }, "")
       this.$year_input.innerHTML = yearHtml
+      */
+      const yearHtml = data.map((movie) => {
+           return this.createRadioButton(movie)
+        }).join("");
+        this.$year_input.innerHTML = yearHtml;
     }
 
     fillGenreBox(){
+      /*
       const genreHtml = data.reduce((acc,cur) =>{
         return acc + this.createCheckBoxButton(cur)
       }, "")
       this.$genre_input.innerHTML = genreHtml
+      */
+      const genreHtml = data.map((movie) => {
+           return this.createCheckBoxButton(movie)
+        }).join("");
+        this.$genre_input.innerHTML = genreHtml;
     }
 
     reset(){
@@ -107,18 +131,6 @@ class MoviesApp {
               return selectedGenre.includes(movie.genre)
             }).forEach(makeBgActive)
         });
-    }
-
-    createRadioButton(movie){
-      const{year, id} = movie
-      let count = data.filter((movie) => movie.year === year).length
-      return this.createYearHTML(id,this.yearHandler, year,count)
-    }
-
-    createCheckBoxButton(movie){
-      const{genre, id} = movie
-      let count = data.filter((movie) => movie.genre === genre).length
-      return this.createGenreHTML(id,this.genreHandler, genre,count)
     }
 
     init(){
