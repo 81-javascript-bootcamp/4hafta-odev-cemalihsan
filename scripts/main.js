@@ -25,23 +25,22 @@ class MoviesApp {
         return `<tr data-id="${id}"><td><img src="${image}"></td><td>${title}</td><td>${genre}</td><td>${year}</td></tr>`
     }
 
-    createFilterButtons(type,id, typeName, year, size){
-      return `<div class="form-check"><input class="form-check-input" type="${type}" name="${typeName}" id="${typeName}${id}"  value="${year}">
-                    <label class="form-check-label" for="${typeName}${id}">
+    createYearHTML(id, name, year, size){
+      return `<div class="form-check"><input class="form-check-input" type="radio" name="${name}" id="${name}${id}"  value="${year}">
+                    <label class="form-check-label" for="${name}${id}">
                         ${year}(${size})
                     </label>
           </div>`
 
     }
 
-    countOfYear(year){
-      let count = data.filter((movie) => movie.year === year).length
-      return count
-    }
+    createGenreHTML(id, name, genre, size){
+      return `<div class="form-check"><input class="form-check-input" type="checkbox" name="${name}" id="${name}${id}"  value="${genre}">
+                    <label class="form-check-label" for="${name}${id}">
+                        ${genre}(${size})
+                    </label>
+          </div>`
 
-    countOfGenre(genre){
-      let count = data.filter((movie) => movie.genre === genre).length
-      return count
     }
 
     fillTable(){
@@ -55,15 +54,15 @@ class MoviesApp {
     }
 
     fillYearBox(){
-      const yearHtml = data.reduce((acc,cur,index) =>{
+      const yearHtml = data.reduce((acc,cur) =>{
         return acc + this.createRadioButton(cur)
       }, "")
       this.$year_input.innerHTML = yearHtml
     }
 
     fillGenreBox(){
-      const genreHtml = data.reduce((acc,cur,index) =>{
-        return acc + this.createCheckBoxButton(cur,index)
+      const genreHtml = data.reduce((acc,cur) =>{
+        return acc + this.createCheckBoxButton(cur)
       }, "")
       this.$genre_input.innerHTML = genreHtml
     }
@@ -100,23 +99,24 @@ class MoviesApp {
      handleGenreFilter(){
         this.$genreSubmitter.addEventListener("click", () => {
             this.reset();
-            const selectedGenre = document.querySelectorAll(`input[name='${this.genreHandler}']:checked`).value
+            const selectedGenre = [...document.querySelectorAll(`input[name='${this.genreHandler}']:checked`)].map((item) => item.value)
 
-            console.log(selectedGenre)
+            const matchedGenres = data.filter((movie) => {
+              return selectedGenre.includes(movie.genre)
+            }).forEach(makeBgActive)
         });
     }
 
-    createRadioButton(movie, index){
+    createRadioButton(movie){
       const{year, id} = movie
-
-      let count = this.countOfYear(year)
-      return this.createFilterButtons("radio",id,this.yearHandler, year,count)
+      let count = data.filter((movie) => movie.year === year).length
+      return this.createYearHTML(id,this.yearHandler, year,count)
     }
 
-    createCheckBoxButton(movie, index){
+    createCheckBoxButton(movie){
       const{genre, id} = movie
-      let count = this.countOfGenre(genre)
-      return this.createFilterButtons("checkbox",id,this.genreHandler, genre,count)
+      let count = data.filter((movie) => movie.genre === genre).length
+      return this.createGenreHTML(id,this.genreHandler, genre,count)
     }
 
     init(){
