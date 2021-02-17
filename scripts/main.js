@@ -45,8 +45,18 @@ class MoviesApp {
 
     createRadioButton(movie){
       const{year, id} = movie
+
+      const yearArr = data.map((movie) => {
+            return movie.year;
+        });
+
       let count = data.filter((movie) => movie.year === year).length
-      return this.createYearHTML(id,this.yearHandler, year,count)
+
+      const filteredArray = yearArr.filter(function(item, pos) {
+         return yearArr.indexOf(item) == pos;
+      })
+
+      return this.createYearHTML(id,this.yearHandler,year,count)
     }
 
     createCheckBoxButton(movie){
