@@ -1,5 +1,5 @@
 import data from "./data.js";
-import {searchMovieByTitle, makeBgActive} from "./helpers.js";
+import {searchMovieByTitle, makeBgActive, makeBgGenreActive} from "./helpers.js";
 
 class MoviesApp {
     constructor(options) {
@@ -43,21 +43,13 @@ class MoviesApp {
 
     }
 
-    createRadioButton(movie){
-      const{year, id} = movie
-
-      const yearArr = data.map((movie) => {
-            return movie.year;
-        });
-
-      let count = data.filter((movie) => movie.year === year).length
+    createRadioButton(year, count, id){
 
       return this.createYearHTML(id,this.yearHandler,year,count)
     }
 
-    createCheckBoxButton(movie){
-      const{genre, id} = movie
-      let count = data.filter((movie) => movie.genre === genre).length
+    createCheckBoxButton(genre, count, id){
+
       return this.createGenreHTML(id,this.genreHandler, genre,count)
     }
 
@@ -78,6 +70,26 @@ class MoviesApp {
       }, "")
       this.$year_input.innerHTML = yearHtml
       */
+
+      let yearsObj = {}
+
+      data.forEach(item => {
+        if(!yearsObj.hasOwnProperty(item.year)){
+          yearsObj[item.year] = {
+            count: 1,
+            id: item.id
+          }
+        }
+        else{
+          yearsObj[item.year].count++
+        }
+      })
+
+      for (const [key, value] of Object.entries(yearsObj)) {
+        this.$year_input.innerHTML += this.createRadioButton(key,value.count, value.id)
+      }
+      
+      /*
       let yearArray = data.map((movie) => movie.year);
 
       const filteredArray = yearArray.filter(function(item, pos) {
@@ -91,6 +103,7 @@ class MoviesApp {
            return this.createRadioButton(movie)
         }).join("");
         this.$year_input.innerHTML = yearHtml;
+      */
     }
 
     fillGenreBox(){
@@ -99,11 +112,30 @@ class MoviesApp {
         return acc + this.createCheckBoxButton(cur)
       }, "")
       this.$genre_input.innerHTML = genreHtml
-      */
+      
       const genreHtml = data.map((movie) => {
            return this.createCheckBoxButton(movie)
         }).join("");
         this.$genre_input.innerHTML = genreHtml;
+      */
+
+      let genreObj = {}
+
+      data.forEach(item => {
+        if(!genreObj.hasOwnProperty(item.genre)){
+          genreObj[item.genre] = {
+            count: 1,
+            id: item.id
+          }
+        }
+        else{
+          genreObj[item.genre].count++
+        }
+      })
+
+      for (const [key, value] of Object.entries(genreObj)) {
+        this.$genre_input.innerHTML += this.createCheckBoxButton(key,value.count, value.id)
+      }
     }
 
     reset(){
@@ -144,7 +176,7 @@ class MoviesApp {
 
             const matchedGenres = data.filter((movie) => {
               return selectedGenre.includes(movie.genre)
-            }).forEach(makeBgActive)
+            }).forEach(makeBgGenreActive)
         });
     }
 
