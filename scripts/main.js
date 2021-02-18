@@ -52,10 +52,6 @@ class MoviesApp {
 
       let count = data.filter((movie) => movie.year === year).length
 
-      const filteredArray = yearArr.filter(function(item, pos) {
-         return yearArr.indexOf(item) == pos;
-      })
-
       return this.createYearHTML(id,this.yearHandler,year,count)
     }
 
@@ -82,6 +78,15 @@ class MoviesApp {
       }, "")
       this.$year_input.innerHTML = yearHtml
       */
+      let yearArray = data.map((movie) => movie.year);
+
+      const filteredArray = yearArray.filter(function(item, pos) {
+         return yearArray.indexOf(item) == pos;
+      })
+
+      console.log(filteredArray)
+      
+
       const yearHtml = data.map((movie) => {
            return this.createRadioButton(movie)
         }).join("");
